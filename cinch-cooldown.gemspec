@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Cinch::Cooldown::VERSION
   gem.authors       = ["Brian Haberer"]
   gem.email         = ["bhaberer@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{This gem allows you to set a shared timer across plugins that are configured to respect it.}
+  gem.summary       = %q{Global Cooldown tracker for Cinch Plugins}
   gem.homepage      = "https://github.com/bhaberer/cinch-cooldown"
 
   gem.files         = `git ls-files`.split($/)

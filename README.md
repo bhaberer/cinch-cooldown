@@ -1,6 +1,7 @@
 # Cinch::Cooldown
 
-TODO: Write a gem description
+This library is used to add a global cooldown so that users are prevented from spamming the
+channel.
 
 ## Installation
 
@@ -18,7 +19,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Coming Soon. :)
 
 ## Contributing
 

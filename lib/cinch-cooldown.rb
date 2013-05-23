@@ -17,22 +17,8 @@ module Cinch
       # return if we don't have a cooldown config
       return true unless shared[:cooldown] && shared[:cooldown][:config]
       synchronize(:cooldown) do
-        # return if we don't have a channel (i.e. user is pming the bot)
-        return true if m.channel.nil?
-
-        channel = m.channel.name
-        user    = m.user.nick
-
-        # return if the config doesn't smell right for this channel
-        return true unless shared[:cooldown][:config].key?(channel) &&
-                           shared[:cooldown][:config][channel].key?(:global)
-                           shared[:cooldown][:config][channel].key?(:user)
-
-        # Check and see if the cooldown has been triggered for this run yet
-        unless shared[:cooldown].key?(channel)
-          trigger_cooldown_for(channel, user)
-          return true
-        end
+        # Make sure the configuration is sane.
+        return true unless configuration_check?(m)
 
         # Normal usage stuff starts here, check and see if the channel time is up
         if channel_cooldown_finished?(channel)
@@ -52,17 +38,43 @@ module Cinch
         end
 
         # Handle cooldowns here
-        message = ['Sorry, you\'ll have to wait']
-        unless channel_cooldown_finished?(channel)
-          message << TimeLord::Period.new(cooldown_channel_expire_time(channel), Time.now).to_words
-          message << 'before I can talk in the channel again, and'
-        end
-        message << TimeLord::Period.new(cooldown_user_expire_time(channel, user), Time.now).to_words
-        message << 'before you can use any commands.'
-
-        m.user.notice message.join(' ')
+        m.user.notice cooldown_message(channel, user)
         return false
       end
+    end
+
+    def configuration_check?(m)
+      # return if we don't have a channel (i.e. user is pming the bot)
+      return false if m.channel.nil?
+
+      channel = m.channel.name
+      user    = m.user.nick
+
+      # return if the config doesn't smell right for this channel
+      return false unless shared[:cooldown][:config].key?(channel) &&
+                          shared[:cooldown][:config][channel].key?(:global)
+                          shared[:cooldown][:config][channel].key?(:user)
+
+      # Check and see if the cooldown has been triggered for this run yet
+      unless shared[:cooldown].key?(channel)
+        trigger_cooldown_for(channel, user)
+        return false
+      end
+
+      # Assuming we didn't hit anything strange, return
+      return true
+    end
+
+    def cooldown_message(channel, user)
+      message = ['Sorry, you\'ll have to wait']
+      unless channel_cooldown_finished?(channel)
+        message << TimeLord::Period.new(cooldown_channel_expire_time(channel), Time.now).to_words
+        message << 'before I can talk in the channel again, and'
+      end
+      message << TimeLord::Period.new(cooldown_user_expire_time(channel, user), Time.now).to_words
+      message << 'before you can use any commands.'
+
+      return message.join(' ')
     end
 
     def trigger_cooldown_for(channel, user)

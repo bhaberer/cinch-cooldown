@@ -1,5 +1,5 @@
 require 'cinch-cooldown/version'
-require 'cinch-toolbox'
+require 'time-lord'
 
 module Cinch
   module Plugin
@@ -8,76 +8,95 @@ module Cinch
         hook(:pre, :for => [:match], :method => lambda {|m| cooldown_finished?(m)})
       end
 
-      def reset_cooldown(m)
+      def reset_cooldown
          # TODO
       end
     end
 
     def cooldown_finished?(m)
+      # return if we don't have a cooldown config
       return true unless shared[:cooldown] && shared[:cooldown][:config]
       synchronize(:cooldown) do
+        # return if we don't have a channel (i.e. user is pming the bot)
         return true if m.channel.nil?
 
         channel = m.channel.name
-        nick = m.user.nick
+        user    = m.user.nick
 
-        return true unless shared[:cooldown][:config][channel]
+        # return if the config doesn't smell right for this channel
+        return true unless shared[:cooldown][:config].key?(channel) &&
+                           shared[:cooldown][:config][channel].key?(:global)
+                           shared[:cooldown][:config][channel].key?(:user)
 
+        # Check and see if the cooldown has been triggered for this run yet
         unless shared[:cooldown].key?(channel)
-          shared[:cooldown][channel] = { 'global' => Time.now, nick => Time.now }
+          trigger_cooldown_for(channel, user)
           return true
         end
 
+        # Normal usage stuff starts here, check and see if the channel time is up
         if channel_cooldown_finished?(channel)
-          # Global cd is up, check per user
-          if shared[:cooldown][channel].key?(nick)
+          # channel cd is up, check per user by checking if the user's even triggered a cd yet
+          if shared[:cooldown][channel].key?(user)
             # User's in the config, check time
-            if user_cooldown_finished?(channel, nick)
-              shared[:cooldown][channel]['global'] = Time.now
-              shared[:cooldown][channel][nick] = Time.now
+            if user_cooldown_finished?(channel, user)
+              # Their time's up, run the command
+              trigger_cooldown_for(channel, user)
               return true
             end
           else
-            # User's not used bot before
-            shared[:cooldown][channel][nick] = Time.now
-            shared[:cooldown][channel]['global'] = Time.now
+            # User's not used bot before, run the command
+            trigger_cooldown_for(channel, user)
             return true
           end
         end
 
-        message = "Sorry, you'll have to wait "
+        # Handle cooldowns here
+        message = ['Sorry, you\'ll have to wait']
         unless channel_cooldown_finished?(channel)
-          message << "#{Cinch::Toolbox.time_format(channel_time_remaining(channel))} before I can talk in the channel again, and "
+          message << TimeLord::Period.new(cooldown_channel_expire_time(channel), Time.now).to_words
+          message << 'before I can talk in the channel again, and'
         end
-        message << "#{Cinch::Toolbox.time_format(user_time_remaining(channel, nick))} before your nick can use any commands."
+        message << TimeLord::Period.new(cooldown_user_expire_time(channel, user), Time.now).to_words
+        message << 'before you can use any commands.'
 
-        m.user.notice message
+        m.user.notice message.join(' ')
         return false
       end
     end
 
-    def user_cooldown_finished?(chan, user)
-      shared[:cooldown][:config][chan]['user']   < user_time_elapsed(chan, user)
+    def trigger_cooldown_for(channel, user)
+      shared[:cooldown][channel] = { :global => Time.now, user => Time.now }
     end
 
-    def channel_cooldown_finished?(chan)
-      shared[:cooldown][:config][chan]['global'] < channel_time_elapsed(chan)
+    def cooldown_channel_expire_time(channel)
+      shared[:cooldown][channel][:global] + shared[:cooldown][:config][channel][:global]
     end
 
-    def channel_time_remaining(chan)
-      shared[:cooldown][:config][chan]['global'] - channel_time_elapsed(chan)
+    def cooldown_user_expire_time(channel, user)
+      shared[:cooldown][channel][user] + shared[:cooldown][:config][channel][:user]
     end
 
-    def user_time_remaining(chan, user)
-      shared[:cooldown][:config][chan]['user'] - user_time_elapsed(chan, user)
+    def user_cooldown_finished?(channel, user)
+      cooldown  = shared[:cooldown][:config][channel][:user]
+      elapsed   = user_time_elapsed(channel, user)
+      remaining = cooldown_user_expire_time(channel, user)
+      return cooldown < elapsed && remaining >= 1
     end
 
-    def channel_time_elapsed(chan)
-      (Time.now - shared[:cooldown][chan]['global']).floor
+    def channel_cooldown_finished?(channel)
+      cooldown  = shared[:cooldown][:config][channel][:global]
+      elapsed   = channel_time_elapsed(channel)
+      remaining = cooldown_channel_expire_time(channel)
+      return cooldown < elapsed && remaining >= 1
     end
 
-    def user_time_elapsed(chan, user)
-      (Time.now - shared[:cooldown][chan][user]).floor
+    def channel_time_elapsed(channel)
+      Time.now - shared[:cooldown][channel][:global]
+    end
+
+    def user_time_elapsed(channel, user)
+      Time.now - shared[:cooldown][channel][user]
     end
   end
 end

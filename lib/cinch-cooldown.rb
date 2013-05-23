@@ -46,7 +46,7 @@ module Cinch
 
     end
 
-    def first_run?(channel)
+    def first_run?(channel, user)
       unless shared[:cooldown].key?(channel)
         trigger_cooldown_for(channel, user)
         return true
@@ -98,24 +98,14 @@ module Cinch
 
     def user_cooldown_finished?(channel, user)
       cooldown  = shared[:cooldown][:config][channel][:user]
-      elapsed   = user_time_elapsed(channel, user)
-      remaining = cooldown_user_expire_time(channel, user)
-      return cooldown < elapsed && remaining >= 1
+      elapsed   = Time.now - shared[:cooldown][channel][user]
+      return cooldown < elapsed
     end
 
     def channel_cooldown_finished?(channel)
       cooldown  = shared[:cooldown][:config][channel][:global]
-      elapsed   = channel_time_elapsed(channel)
-      remaining = cooldown_channel_expire_time(channel)
-      return cooldown < elapsed && remaining >= 1
-    end
-
-    def channel_time_elapsed(channel)
-      Time.now - shared[:cooldown][channel][:global]
-    end
-
-    def user_time_elapsed(channel, user)
-      Time.now - shared[:cooldown][channel][user]
+      elapsed   = Time.now - shared[:cooldown][channel][:global]
+      return cooldown < elapsed
     end
   end
 end

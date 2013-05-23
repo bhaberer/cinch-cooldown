@@ -1,5 +1,7 @@
 # Cinch::Cooldown
 
+[![Code Climate](https://codeclimate.com/github/bhaberer/cinch-cooldown.png)](https://codeclimate.com/github/bhaberer/cinch-cooldown)
+
 This library is used to add a global cooldown so that users are prevented from spamming the
 channel.
 

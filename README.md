@@ -1,5 +1,9 @@
 # Cinch::Cooldown
 
+[![Gem Version](https://badge.fury.io/rb/cinch-cooldown.png)](http://badge.fury.io/rb/cinch-cooldown)
+[![Dependency Status](https://gemnasium.com/bhaberer/cinch-cooldown.png)](https://gemnasium.com/bhaberer/cinch-cooldown)
+[![Build Status](https://travis-ci.org/bhaberer/cinch-cooldown.png?branch=master)](https://travis-ci.org/bhaberer/cinch-cooldown)
+[![Coverage Status](https://coveralls.io/repos/bhaberer/cinch-cooldown/badge.png?branch=master)](https://coveralls.io/r/bhaberer/cinch-cooldown?branch=master)
 [![Code Climate](https://codeclimate.com/github/bhaberer/cinch-cooldown.png)](https://codeclimate.com/github/bhaberer/cinch-cooldown)
 
 This library is used to add a global cooldown so that users are prevented from spamming the

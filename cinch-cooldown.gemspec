@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cinch-cooldown/version'
+require 'cinch/cooldown/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "cinch-cooldown"
@@ -17,5 +17,11 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency('time-lord', '>= 1.0.1')
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'coveralls'
+  gem.add_development_dependency 'cinch-test'
+
+  gem.add_dependency    'time-lord',      '~> 1.0.1'
+  gem.add_dependency    'cinch',          '~> 2.0.5'
 end

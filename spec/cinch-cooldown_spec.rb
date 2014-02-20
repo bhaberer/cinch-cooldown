@@ -65,6 +65,17 @@ describe Cinch::Cooldown do
       should == 'OMG'
   end
 
+  it 'should aplugins to mandate a minimum time between responses in channel' do
+    @bot = bot_for_cooldowns(5, 10)
+    get_replies(make_message(@bot, "!thing", channel: '#foo'))
+    get_replies(make_message(@bot, "thing",  channel: '#foo'))
+    sleep 6
+    get_replies(make_message(@bot, "!thing", channel: '#foo', nick: 'george'))
+    sleep 4
+    get_replies(make_message(@bot, "!thing", channel: '#foo')).first.text.
+      should == 'OMG'
+  end
+
   it 'should not trigger if the config for the current channel does not exist' do
     @bot = bot_for_cooldowns(5, 10)
     get_replies(make_message(@bot, "!thing", channel: '#bar'))

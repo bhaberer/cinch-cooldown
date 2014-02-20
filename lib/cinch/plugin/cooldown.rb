@@ -11,7 +11,8 @@ module Cinch
       def self.finished?(m, shared, bot)
         @cooldown_state_data = shared
         # return if we don't have a cooldown config
-        return true unless @cooldown_state_data[:config]
+        return true unless @cooldown_state_data &&
+                           @cooldown_state_data.key?(:config)
         bot.synchronize(:cooldown) do
           # return if we don't have a channel (i.e. user is pming the bot)
           return true if m.channel.nil?
@@ -26,13 +27,11 @@ module Cinch
 
       def self.cool?(channel, user)
         # Make sure the configuration is sane.
-        return true if config_broken?(channel)
-
-        # Make sure it's not the first command
-        return true if first_run?(channel, user)
-
-        # Check if timers are finished
-        return true if cooldowns_finished?(channel, user)
+        return true if config_broken?(channel) ||
+                       # Make sure it's not the first command
+                       first_run?(channel, user) ||
+                       # Check if timers are finished
+                       cooldowns_finished?(channel, user)
 
         false
       end
@@ -55,6 +54,7 @@ module Cinch
 
       def self.first_run?(channel, user)
         unless @cooldown_state_data.key?(channel)
+          warn '[[ Initializing Cooldown Data ]]'
           trigger_cooldown_for(channel, user)
           true
         end
@@ -84,7 +84,12 @@ module Cinch
       end
 
       def self.trigger_cooldown_for(channel, user)
-        @cooldown_state_data[channel] = { global: Time.now, user => Time.now }
+        @cooldown_state_data[channel] ||= {}
+        @cooldown_state_data[channel][:global] = Time.now
+        @cooldown_state_data[channel][user] = Time.now
+        # @cooldown_state_data[channel] = { :global => Time.now,
+        #                                   user    => Time.now }
+        warn "[[ Cooldown Triggered for user: #{user} ]]"
       end
 
       def self.channel_expire_time(channel)

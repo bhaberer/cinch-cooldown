@@ -5,7 +5,7 @@ require 'cinch/cooldown/version'
 
 Gem::Specification.new do |gem|
   gem.name          = 'cinch-cooldown'
-  gem.version       = Cinch::Cooldown::VERSION
+  gem.version       = Cinch::Cooldowns::VERSION
   gem.authors       = ['Brian Haberer']
   gem.email         = ['bhaberer@gmail.com']
   gem.description   = %q{This gem allows you to set a shared timer across plugins that are configured to respect it.}

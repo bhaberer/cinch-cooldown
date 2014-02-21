@@ -6,7 +6,7 @@ module Cinch
     module ClassMethods
       def enforce_cooldown
         hook(:pre, for: [:match],
-                   method: ->(m){ Cooldown.finished?(m, shared[:cooldown], @bot) })
+                   method: ->(m){ Cooldowns.finished?(m, shared[:cooldown], @bot) })
       end
     end
   end

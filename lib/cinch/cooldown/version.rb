@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module Cinch
   # Versioning info
-  module Cooldown
-    VERSION = '1.1.1'
+  module Cooldowns
+    VERSION = '1.1.2'
   end
 end

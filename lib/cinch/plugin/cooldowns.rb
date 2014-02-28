@@ -9,8 +9,9 @@ module Cinch
 
       # Main method called by the hook
       def self.finished?(m, shared, bot)
-        @config = shared[:config]
-        @cooldowns = shared[:cooldowns] if shared.key?(:cooldowns)
+        return unless shared.is_a?(Hash)
+        @config     = shared[:config]
+        @cooldowns  = shared[:cooldowns] if shared.key?(:cooldowns)
 
         # Don't run if we there's no cooldown config
         return true unless @config

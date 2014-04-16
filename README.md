@@ -37,7 +37,7 @@ that the user timer will be greater than the global timer.
                                                          :user   => 20 } }
 
 2. If you are using this with my plugins, things should just work. However if you want to use
-this with your own plugins, yoiu need to add a `require cinch-cooldown` to the top of said
+this with your own plugins, yoiu need to add a `require cinch/cooldown` to the top of said
 plugin, and an `enforce_cooldown` to the plugin after the `include Cinch::Plugin` line.
 
 ## Contributing

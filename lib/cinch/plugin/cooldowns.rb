@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 module Cinch
   module Plugin
+    # Class for managing the cooldown objects.
     module Cooldowns
       include Cinch::Plugin
 
@@ -9,7 +10,6 @@ module Cinch
 
       # Main method called by the hook
       def self.finished?(m, shared, bot)
-        return unless shared.is_a?(Hash)
         @config     = shared[:config]
         @cooldowns  = shared[:cooldowns] if shared.key?(:cooldowns)
 
@@ -92,9 +92,7 @@ module Cinch
       def self.clean_expired_cooldowns(channel)
         return unless @cooldowns.key?(channel)
         @cooldowns[channel].each_pair do |key, cooldown|
-          if cooldown.cooled_down?
-            @cooldowns[channel].delete(key)
-          end
+          @cooldowns[channel].delete(key) if cooldown.cooled_down?
         end
       end
 

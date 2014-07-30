@@ -34,39 +34,39 @@ describe Cinch::Cooldowns do
   it 'should not trigger cooldowns on private messages' do
     bot = bot_for_cooldowns(10)
     get_replies(make_message(bot, "!thing"))
-    get_replies(make_message(bot, "!thing")).first.text.
-      should match "OMG"
+    expect(get_replies(make_message(bot, "!thing")).first.text)
+      .to match('OMG')
   end
 
   it 'should allow plugins to mandate a global cooldown between responses in channel' do
     bot = bot_for_cooldowns(10)
     get_replies(make_message(bot, "!thing", channel: '#foo'))
-    get_replies(make_message(bot, "!thing", channel: '#foo')).first.text.
-      should match(/Sorry, cooldown is in effect: \d+ seconds from now before/)
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo')).first.text)
+      .to match(/Sorry, cooldown is in effect: \d+ seconds from now before/)
   end
 
   it 'should allow plugins allow responses after the global cooldown' do
     bot = bot_for_cooldowns(5, 5)
     get_replies(make_message(bot, "!thing", channel: '#foo'))
     sleep 7
-    get_replies(make_message(bot, "!thing", channel: '#foo')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo')).first.text)
+      .to eq('OMG')
   end
 
   it 'should allow plugins to mandate a minimum time between responses in channel' do
     bot = bot_for_cooldowns(5, 10)
     get_replies(make_message(bot, "!thing", channel: '#foo'))
     sleep 7
-    get_replies(make_message(bot, "!thing", channel: '#foo')).first.text.
-      should match(/Sorry, cooldown is in effect: \d+ seconds from now before you can use/)
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo')).first.text)
+      .to match(/Sorry, cooldown is in effect: \d+ seconds from now before you can use/)
   end
 
   it 'should allow plugins to mandate a minimum time between responses in channel' do
     bot = bot_for_cooldowns(5, 10)
     get_replies(make_message(bot, "!thing", channel: '#foo'))
     sleep 12
-    get_replies(make_message(bot, "!thing", channel: '#foo')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo')).first.text)
+      .to eq('OMG')
   end
 
   it 'should aplugins to mandate a minimum time between responses in channel' do
@@ -76,30 +76,30 @@ describe Cinch::Cooldowns do
     sleep 6
     get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'george'))
     sleep 5
-    get_replies(make_message(bot, "!thing", channel: '#foo')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo')).first.text)
+      .to eq('OMG')
   end
 
   it 'should not trigger if the config for the current channel does not exist' do
     bot = bot_for_cooldowns(5, 10)
     get_replies(make_message(bot, "!thing", channel: '#bar'))
-    get_replies(make_message(bot, "!thing", channel: '#bar')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#bar')).first.text)
+      .to eq('OMG')
   end
 
   it 'should trigger for other users if the global cooldown is finished' do
     bot = bot_for_cooldowns(0, 20)
-    get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test1')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test1')).first.text)
+      .to eq('OMG')
     sleep 1
-    get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test2')).first.text.
-      should == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test2')).first.text)
+      .to eq('OMG')
   end
   it 'should trigger for other users if the global cooldown is finished' do
     bot = bot_for_cooldowns(10, 20)
-    get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test1')).first.text.
-      should == 'OMG'
-    get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test2')).first.text.
-      should_not == 'OMG'
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test1')).first.text)
+      .to eq('OMG')
+    expect(get_replies(make_message(bot, "!thing", channel: '#foo', nick: 'test2')).first.text)
+      .not_to eq('OMG')
   end
 end

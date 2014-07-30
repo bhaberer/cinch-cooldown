@@ -5,8 +5,9 @@ module Cinch
     # Add the pre hook to all messages triggered
     module ClassMethods
       def enforce_cooldown
-        hook(:pre, for: [:match],
-                   method: ->(m){ Cooldowns.finished?(m, shared[:cooldown], @bot) })
+        hook(:pre,
+             for: [:match],
+             method: ->(m) { Cooldowns.finished?(m, shared[:cooldown], @bot) })
       end
     end
   end

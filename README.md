@@ -33,8 +33,7 @@ many seconds the bot will wait before listening to a command that prints somethi
 channel, while the `:user` directive is how long. Currently the gem is simple and assumes
 that the user timer will be greater than the global timer.
 
-    c.shared[:cooldown] = { :config => { '#bottest' => { :global => 10
-                                                         :user   => 20 } }
+    c.shared[:cooldown] = { :config => { '#bottest' => { :global => 10, :user   => 20 } } }
 
 2. If you are using this with my plugins, things should just work. However if you want to use
 this with your own plugins, you need to add a `require cinch/cooldown` to the top of said

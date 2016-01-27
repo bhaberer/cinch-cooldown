@@ -2,6 +2,6 @@
 module Cinch
   # Versioning info
   module Cooldowns
-    VERSION = '1.1.6'
+    VERSION = '1.1.5'
   end
 end

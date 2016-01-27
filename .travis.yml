@@ -1,4 +1,5 @@
 language: ruby
+sudo: false
 env:
   global:
     - "JRUBY_OPTS=-Xcext.enabled=true"

@@ -1,4 +1,6 @@
 language: ruby
+sudo: required
+dist: precise
 env:
   global:
     - "JRUBY_OPTS=-Xcext.enabled=true"

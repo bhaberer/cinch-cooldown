@@ -3,9 +3,9 @@
 [![Gem Version](https://badge.fury.io/rb/cinch-cooldown.png)](http://badge.fury.io/rb/cinch-cooldown)
 [![Dependency Status](https://gemnasium.com/bhaberer/cinch-cooldown.png)](https://gemnasium.com/bhaberer/cinch-cooldown)
 [![Build Status](https://travis-ci.org/bhaberer/cinch-cooldown.png?branch=master)](https://travis-ci.org/bhaberer/cinch-cooldown)
-[![Test Coverage](https://codeclimate.com/repos/56aa88055b34ac003a008480/badges/9d9707a152831ec1d620/coverage.svg)](https://codeclimate.com/repos/56aa88055b34ac003a008480/coverage)
-[![Code Climate](https://codeclimate.com/github/bhaberer/cinch-cooldown.png)](https://codeclimate.com/github/bhaberer/cinch-cooldown)
-[![Issue Count](https://codeclimate.com/repos/56aa88055b34ac003a008480/badges/9d9707a152831ec1d620/issue_count.svg)](https://codeclimate.com/repos/56aa88055b34ac003a008480/feed)
+[![Code Climate](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/badges/3a98b90ce443c23969c8/gpa.svg)](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/feed)
+[![Test Coverage](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/badges/3a98b90ce443c23969c8/coverage.svg)](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/coverage)
+[![Issue Count](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/badges/3a98b90ce443c23969c8/issue_count.svg)](https://codeclimate.com/repos/56aa7be85b34ac007f002f94/feed)
 
 This library is used to add a global cooldown so that users are prevented from spamming the
 channel.

@@ -5,7 +5,8 @@ class MyPlugin
 
   enforce_cooldown
 
-  match /thing/
+  match(/thing/)
+  
   def execute(m)
     m.reply 'OMG'
   end

@@ -22,13 +22,15 @@ module Cinch
           #   (i.e. user is pming the bot)
           return true if m.channel.nil?
 
-          clean_expired_cooldowns(m.channel.name)
+          channel = channel_to_key(m.channel.name)
+
+          clean_expired_cooldowns(channel)
 
           # return true if the cooldowns have expired
-          return true if cool?(m.channel.name, m.user.nick)
+          return true if cool?(channel, m.user.nick)
 
           # Otherwise message the user about unfinished cooldowns
-          m.user.notice message(m.channel.name, m.user.nick)
+          m.user.notice message(channel, m.user.nick)
 
           # and return false so the command gets dropped by the hook
           false
@@ -55,6 +57,11 @@ module Cinch
                            config_for(channel).key?(:user)
         # otherwise abort cooldown enforcement
         false
+      end
+
+      def self.channel_to_key(channel)
+        return channel if channel.is_a?(Symbol)
+        channel[/\w+/].to_sym
       end
 
       def self.config_for(chan)
